@@ -7,13 +7,22 @@
 #define SENSOR 33
 #define LED 26
 #define DHTTYPE DHT11
+#define BLYNK_TEMPLATE_ID "TMPL5f37TUT1t"
+#define BLYNK_TEMPLATE_NAME "TP2"
+#define BLYNK_AUTH_TOKEN "UoAf_E0bHfl9eJOcq2j9PduiKd25A-3t"
+
+// Include pour le wifi et blynk
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+
+#define BLYNK_PRINT Serial
 
 DHT_Unified dht(SENSOR, DHTTYPE);
 
 // WiFi credentials go here
-// ...
-// ...
-// ...
+char ssid[] = "iPhone de camille";
+char pass[] = "camcam02";
 
 void setup() {
   // Setup pins
@@ -25,9 +34,8 @@ void setup() {
   delay(100);
 
   // begin the Blynk session
-  // ...
-  // ...
-  // ...
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+  Blynk.run();
 
   // Start listening to the DHT11
   dht.begin();
