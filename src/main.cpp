@@ -24,6 +24,16 @@ DHT_Unified dht(SENSOR, DHTTYPE);
 char ssid[] = "iPhone de camille";
 char pass[] = "camcam02";
 
+BLYNK_WRITE(V2)
+{
+  int pinValue = param.asInt(); // assigning incoming value from pin V0 to a variable
+  Serial.print("Received value from Blynk: ");
+  Serial.println(pinValue);
+  digitalWrite(LED,pinValue);
+  // Delay is only there so that we get a chance to see the LED value properly.
+  delay(1000);
+}
+
 void setup() {
   // Setup pins
   pinMode(LED, OUTPUT);
@@ -36,6 +46,7 @@ void setup() {
   // begin the Blynk session
   Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
   Blynk.run();
+  Blynk.syncVirtual(V2);
 
   // Start listening to the DHT11
   dht.begin();
@@ -65,10 +76,12 @@ void setup() {
     Serial.println(F("%"));
     relative_humidity_measure = event.relative_humidity;
   }
+  Serial.print("LED VALUE: ");
+  Serial.print(digitalRead(LED));
 
   // Send data to Blynk
-  Blynk.virtualWrite(V0, temp_measure);  // Assuming V0 is the virtual pin for temperature in your Blynk app
-  Blynk.virtualWrite(V1, relative_humidity_measure);  // Assuming V1 is the virtual pin for humidity in your Blynk app
+  Blynk.virtualWrite(V1, temp_measure);  // Assuming V0 is the virtual pin for temperature in your Blynk app
+  Blynk.virtualWrite(V0, relative_humidity_measure);  // Assuming V1 is the virtual pin for humidity in your Blynk app
 
 
   Serial.println("Going to sleep for 5 seconds...");
